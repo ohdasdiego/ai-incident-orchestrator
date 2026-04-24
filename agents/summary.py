@@ -1,4 +1,5 @@
 import anthropic
+import re
 import json
 
 SYSTEM_PROMPT = """You are a NOC Summary Agent. You receive the full output of an incident orchestration pipeline and produce a final structured incident report.
@@ -55,4 +56,7 @@ Escalation Gate Decision:
     )
 
     raw = message.content[0].text.strip()
+    match = re.search(r'```(?:json)?\s*([\s\S]*?)\s*```', raw)
+    if match:
+        raw = match.group(1).strip()
     return json.loads(raw)

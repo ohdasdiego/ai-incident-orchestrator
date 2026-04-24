@@ -1,4 +1,5 @@
 import anthropic
+import re
 import json
 
 SYSTEM_PROMPT = """You are a NOC Triage Agent. Your job is to classify incoming incidents quickly and accurately.
@@ -26,4 +27,7 @@ def triage_agent(incident: str, api_key: str) -> dict:
     )
 
     raw = message.content[0].text.strip()
+    match = re.search(r'```(?:json)?\s*([\s\S]*?)\s*```', raw)
+    if match:
+        raw = match.group(1).strip()
     return json.loads(raw)
