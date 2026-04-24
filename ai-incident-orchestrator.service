@@ -1,0 +1,14 @@
+[Unit]
+Description=AI Incident Orchestrator
+After=network.target
+
+[Service]
+User=claw
+WorkingDirectory=/home/claw/Projects/ai-incident-orchestrator
+EnvironmentFile=/home/claw/Projects/ai-incident-orchestrator/.env
+ExecStart=/home/claw/Projects/ai-incident-orchestrator/venv/bin/gunicorn --workers 1 --bind 127.0.0.1:5004 --timeout 120 app:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

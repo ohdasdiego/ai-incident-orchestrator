@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incident Orchestrator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #111111;
+      --panel:        #181818;
+      --card:         #1f1f1f;
+      --border:       #2a2a2a;
+      --border2:      #333333;
+      --orange:       #ff6b00;
+      --orange2:      #ff8c00;
+      --orange-dim:   rgba(255,107,0,0.12);
+      --orange-glow:  rgba(255,107,0,0.25);
+      --green:        #73bf69;
+      --green-dim:    rgba(115,191,105,0.1);
+      --yellow:       #f5a623;
+      --red:          #f2495c;
+      --red-dim:      rgba(242,73,92,0.1);
+      --text:         #d9d9d9;
+      --muted:        #686868;
+      --muted2:       #888888;
+      --font:         'Inter', 'Segoe UI', system-ui, sans-serif;
+      --mono:         'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-icon {
+      width: 28px; height: 28px;
+      background: var(--orange);
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+      box-shadow: 0 0 10px var(--orange-glow);
+    }
+
+    .logo h1 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: var(--text);
+    }
+
+    .logo h1 span { color: var(--orange); }
+
+    .logo-sub {
+      font-size: 0.65rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+      margin-left: 0.4rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    .status-text {
+      font-size: 0.65rem;
+      color: var(--green);
+      font-family: var(--mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Input Panel ── */
+    .input-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem;
+    }
+
+    .incident-textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.7;
+      padding: 0.75rem 1rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .incident-textarea::placeholder { color: var(--muted); }
+    .incident-textarea:focus { border-color: var(--border2); }
+
+    .input-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .samples-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+      margin-right: 0.4rem;
+    }
+
+    .sample-incidents { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
+
+    .sample-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted2);
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.15s;
+    }
+
+    .sample-btn:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+
+    .run-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--orange);
+      border: none;
+      border-radius: 3px;
+      color: #000;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .run-btn:hover { background: var(--orange2); box-shadow: 0 0 12px var(--orange-glow); }
+    .run-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+    /* ── Pipeline ── */
+    .pipeline-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem;
+    }
+
+    .pipeline-stages { display: flex; flex-direction: column; }
+
+    .stage-arrow {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 0.3rem 0;
+    }
+
+    .stage-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .stage-card.running { border-color: var(--orange); }
+    .stage-card.done    { border-color: var(--green); }
+    .stage-card.escalated { border-color: var(--red); }
+    .stage-card.skipped { opacity: 0.5; }
+
+    .stage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1rem;
+      gap: 0.75rem;
+    }
+
+    .stage-info { display: flex; align-items: center; gap: 0.75rem; }
+
+    .stage-icon {
+      font-size: 1rem;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .stage-card.running .stage-icon { color: var(--orange); animation: spin-slow 2s linear infinite; }
+    .stage-card.done    .stage-icon { color: var(--green); }
+    .stage-card.escalated .stage-icon { color: var(--red); }
+
+    @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    .stage-name {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      font-family: var(--mono);
+    }
+
+    .stage-desc {
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 1px;
+      font-family: var(--mono);
+    }
+
+    .stage-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.15rem 0.6rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .stage-badge.running   { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+    .stage-badge.done      { border-color: var(--green);  color: var(--green);  background: var(--green-dim); }
+    .stage-badge.escalated { border-color: var(--red);    color: var(--red);    background: var(--red-dim); }
+    .stage-badge.auto      { border-color: var(--green);  color: var(--green);  background: var(--green-dim); }
+    .stage-badge.skipped   { opacity: 0.5; }
+
+    .stage-output {
+      border-top: 1px solid var(--border);
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .stage-output.visible { max-height: 600px; padding: 0.75rem 1rem; }
+
+    .output-row { display: flex; gap: 0.75rem; margin-bottom: 0.3rem; flex-wrap: wrap; }
+    .output-key { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); min-width: 140px; flex-shrink: 0; }
+    .output-val { font-family: var(--mono); font-size: 0.72rem; color: var(--text); }
+    .output-val.sev-critical { color: var(--red); font-weight: 700; }
+    .output-val.sev-high     { color: var(--yellow); font-weight: 700; }
+    .output-val.sev-medium   { color: var(--orange2); }
+    .output-val.sev-low      { color: var(--green); }
+    .output-val.decision-escalate { color: var(--red); font-weight: 700; }
+    .output-val.decision-auto     { color: var(--green); font-weight: 700; }
+
+    /* ── Report ── */
+    .report-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem;
+    }
+
+    .report-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--orange);
+      border-radius: 3px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .report-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+
+    .report-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .report-tag {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.15rem 0.55rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+
+    .report-tag.auto-remediated { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(115,191,105,0.3); }
+    .report-tag.escalated       { background: var(--red-dim);    color: var(--red);    border: 1px solid rgba(242,73,92,0.3); }
+    .report-tag.pending-review  { background: var(--orange-dim); color: var(--orange2); border: 1px solid rgba(255,107,0,0.3); }
+    .report-tag.sev             { background: var(--orange-dim); color: var(--orange);  border: 1px solid rgba(255,107,0,0.3); }
+
+    .report-divider { height: 1px; background: var(--border); }
+
+    .report-section-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .report-text {
+      font-size: 0.78rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .report-list { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+
+    .report-list li {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .report-list li::before { content: '→'; position: absolute; left: 0; color: var(--orange); }
+
+    .runbook-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.75rem 1rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.65rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    footer a { color: var(--orange); text-decoration: none; opacity: 0.8; }
+    footer a:hover { opacity: 1; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      header { padding: 0 1rem; height: auto; min-height: 48px; flex-wrap: wrap; gap: 0.5rem; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+      .logo-sub { display: none; }
+      main { padding: 1rem 0.75rem; }
+      .input-actions { flex-direction: column; align-items: stretch; }
+      .run-btn { justify-content: center; }
+      .output-key { min-width: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⬡</div>
+    <h1>Incident <span>Orchestrator</span></h1>
+    <span class="logo-sub">Multi-Agent Pipeline · ADOstack</span>
+  </div>
+  <div class="header-right">
+    <div class="status-dot"></div>
+    <span class="status-text">System Ready</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- Input -->
+  <div class="input-panel">
+    <div class="section-label">Incident Input</div>
+    <textarea
+      id="incidentInput"
+      class="incident-textarea"
+      placeholder="Paste alert, describe incident, or paste raw log output...
+
+Example: CPU usage on prod-db-01 spiked to 98% at 03:42 UTC. Multiple slow query alerts firing. Redis connection pool exhausted. Users reporting checkout timeouts."
+      rows="6"
+    ></textarea>
+    <div class="input-actions">
+      <div class="sample-incidents">
+        <span class="samples-label">Try a sample:</span>
+        <button class="sample-btn" data-sample="db">DB Spike</button>
+        <button class="sample-btn" data-sample="network">Network Drop</button>
+        <button class="sample-btn" data-sample="security">Auth Breach</button>
+        <button class="sample-btn" data-sample="k8s">K8s OOMKill</button>
+      </div>
+      <button id="runBtn" class="run-btn">
+        <span id="runBtnText">RUN PIPELINE</span>
+        <span>▶</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="pipeline-panel" id="pipelineSection" style="display:none">
+    <div class="section-label">Pipeline Execution</div>
+    <div class="pipeline-stages">
+
+      <div class="stage-card" id="stage-triage">
+        <div class="stage-header">
+          <div class="stage-info">
+            <span class="stage-icon">⬡</span>
+            <div>
+              <div class="stage-name">TRIAGE AGENT</div>
+              <div class="stage-desc">Severity classification · Category detection</div>
+            </div>
+          </div>
+          <div class="stage-badge" id="badge-triage">WAITING</div>
+        </div>
+        <div class="stage-output" id="output-triage"></div>
+      </div>
+
+      <div class="stage-arrow">↓</div>
+
+      <div class="stage-card" id="stage-analyst">
+        <div class="stage-header">
+          <div class="stage-info">
+            <span class="stage-icon">⬡</span>
+            <div>
+              <div class="stage-name">ANALYST AGENT</div>
+              <div class="stage-desc">Root cause analysis · Blast radius assessment</div>
+            </div>
+          </div>
+          <div class="stage-badge" id="badge-analyst">WAITING</div>
+        </div>
+        <div class="stage-output" id="output-analyst"></div>
+      </div>
+
+      <div class="stage-arrow">↓</div>
+
+      <div class="stage-card" id="stage-escalation">
+        <div class="stage-header">
+          <div class="stage-info">
+            <span class="stage-icon">⬡</span>
+            <div>
+              <div class="stage-name">ESCALATION GATE</div>
+              <div class="stage-desc">Human-in-the-loop decision point</div>
+            </div>
+          </div>
+          <div class="stage-badge" id="badge-escalation">WAITING</div>
+        </div>
+        <div class="stage-output" id="output-escalation"></div>
+      </div>
+
+      <div class="stage-arrow">↓</div>
+
+      <div class="stage-card" id="stage-runbook">
+        <div class="stage-header">
+          <div class="stage-info">
+            <span class="stage-icon">⬡</span>
+            <div>
+              <div class="stage-name">RUNBOOK AGENT</div>
+              <div class="stage-desc">RAG Runbook Assistant · Auto-remediation lookup</div>
+            </div>
+          </div>
+          <div class="stage-badge" id="badge-runbook">WAITING</div>
+        </div>
+        <div class="stage-output" id="output-runbook"></div>
+      </div>
+
+      <div class="stage-arrow">↓</div>
+
+      <div class="stage-card" id="stage-summary">
+        <div class="stage-header">
+          <div class="stage-info">
+            <span class="stage-icon">⬡</span>
+            <div>
+              <div class="stage-name">SUMMARY AGENT</div>
+              <div class="stage-desc">Final incident report · Telegram dispatch</div>
+            </div>
+          </div>
+          <div class="stage-badge" id="badge-summary">WAITING</div>
+        </div>
+        <div class="stage-output" id="output-summary"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Report -->
+  <div class="report-panel" id="reportSection" style="display:none">
+    <div class="section-label">Incident Report</div>
+    <div class="report-card" id="reportCard"></div>
+  </div>
+
+</main>
+
+<footer>
+  <a href="https://github.com/ohdasdiego" target="_blank">ohdasdiego</a> ·
+  <a href="https://github.com/ohdasdiego/ai-incident-orchestrator" target="_blank">GitHub</a>
+  <span>ADOstack · Multi-Agent Pipeline · Claude Haiku</span>
+</footer>
+
+<script src="/static/js/app.js?v=1"></script>
+</body>
+</html>
