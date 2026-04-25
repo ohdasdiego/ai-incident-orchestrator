@@ -275,6 +275,20 @@
 
     @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
+    .stage-spinner {
+      display: none;
+      width: 14px; height: 14px;
+      border: 2px solid var(--border2);
+      border-top-color: var(--orange);
+      border-radius: 50%;
+      animation: spin-slow 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .stage-card.running .stage-spinner { border-top-color: var(--orange); }
+    .stage-card.done    .stage-spinner { display: none !important; }
+    .stage-card.escalated .stage-spinner { display: none !important; }
+
     .stage-name {
       font-size: 0.72rem;
       font-weight: 600;
@@ -500,6 +514,7 @@ Example: CPU usage on prod-db-01 spiked to 98% at 03:42 UTC. Multiple slow query
             </div>
           </div>
           <div class="stage-badge" id="badge-triage">WAITING</div>
+          <div class="stage-spinner" id="spinner-triage"></div>
         </div>
         <div class="stage-output" id="output-triage"></div>
       </div>
@@ -516,6 +531,7 @@ Example: CPU usage on prod-db-01 spiked to 98% at 03:42 UTC. Multiple slow query
             </div>
           </div>
           <div class="stage-badge" id="badge-analyst">WAITING</div>
+          <div class="stage-spinner" id="spinner-analyst"></div>
         </div>
         <div class="stage-output" id="output-analyst"></div>
       </div>
@@ -532,6 +548,7 @@ Example: CPU usage on prod-db-01 spiked to 98% at 03:42 UTC. Multiple slow query
             </div>
           </div>
           <div class="stage-badge" id="badge-escalation">WAITING</div>
+          <div class="stage-spinner" id="spinner-escalation"></div>
         </div>
         <div class="stage-output" id="output-escalation"></div>
       </div>
@@ -548,6 +565,7 @@ Example: CPU usage on prod-db-01 spiked to 98% at 03:42 UTC. Multiple slow query
             </div>
           </div>
           <div class="stage-badge" id="badge-runbook">WAITING</div>
+          <div class="stage-spinner" id="spinner-runbook"></div>
         </div>
         <div class="stage-output" id="output-runbook"></div>
       </div>
@@ -564,6 +582,7 @@ Example: CPU usage on prod-db-01 spiked to 98% at 03:42 UTC. Multiple slow query
             </div>
           </div>
           <div class="stage-badge" id="badge-summary">WAITING</div>
+          <div class="stage-spinner" id="spinner-summary"></div>
         </div>
         <div class="stage-output" id="output-summary"></div>
       </div>
@@ -585,6 +604,6 @@ Example: CPU usage on prod-db-01 spiked to 98% at 03:42 UTC. Multiple slow query
   <span>ADOstack · Multi-Agent Pipeline · Claude Haiku</span>
 </footer>
 
-<script src="/static/js/app.js?v=1"></script>
+<script src="/static/js/app.js?v=2"></script>
 </body>
 </html>
