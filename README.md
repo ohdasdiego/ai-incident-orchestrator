@@ -134,6 +134,7 @@ This pipeline is intentionally built with raw Python + the Anthropic SDK rather 
 | 4 | RAG Runbook Assistant | [runbooks.ado-runner.com](https://runbooks.ado-runner.com) |
 | 5 | K8s Event Summarizer | [k8s.ado-runner.com](https://k8s.ado-runner.com) |
 | **7** | **AI Incident Orchestrator** | **[orchestrator.ado-runner.com](https://orchestrator.ado-runner.com)** |
+| 8 | On-Call Assistant | [oncall.ado-runner.com](https://oncall.ado-runner.com) |
 
 ---
 
