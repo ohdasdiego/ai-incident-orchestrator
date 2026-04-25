@@ -333,9 +333,11 @@
 
     .stage-output.visible { max-height: 600px; padding: 0.75rem 1rem; }
 
-    .output-row { display: flex; gap: 0.75rem; margin-bottom: 0.3rem; flex-wrap: wrap; }
-    .output-key { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); min-width: 140px; flex-shrink: 0; }
-    .output-val { font-family: var(--mono); font-size: 0.72rem; color: var(--text); }
+    .output-row { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.3rem; }
+    .output-row-block { display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.5rem; }
+    .output-key { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); min-width: 140px; flex-shrink: 0; white-space: nowrap; }
+    .output-val { font-family: var(--mono); font-size: 0.72rem; color: var(--text); flex: 1; min-width: 0; overflow-wrap: break-word; }
+    .output-val-block { font-family: var(--mono); font-size: 0.72rem; color: var(--text); white-space: pre-wrap; word-break: break-word; padding: 0.4rem 0.6rem; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; line-height: 1.6; }
     .output-val.sev-critical { color: var(--red); font-weight: 700; }
     .output-val.sev-high     { color: var(--yellow); font-weight: 700; }
     .output-val.sev-medium   { color: var(--orange2); }
@@ -453,7 +455,7 @@
       main { padding: 1rem 0.75rem; }
       .input-actions { flex-direction: column; align-items: stretch; }
       .run-btn { justify-content: center; }
-      .output-key { min-width: 100px; }
+      .output-key { min-width: 110px; }
     }
   </style>
 </head>
@@ -604,6 +606,6 @@ Example: CPU usage on prod-db-01 spiked to 98% at 03:42 UTC. Multiple slow query
   <span>ADOstack · Multi-Agent Pipeline · Claude Haiku</span>
 </footer>
 
-<script src="/static/js/app.js?v=2"></script>
+<script src="/static/js/app.js?v=3"></script>
 </body>
 </html>

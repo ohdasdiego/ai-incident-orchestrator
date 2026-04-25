@@ -144,7 +144,11 @@ function setStageResult(stage, status, result) {
 // ── Renderers ──
 
 function row(key, val, valClass = '') {
-  return `<div class="output-row"><span class="output-key">${key}</span><span class="output-val ${valClass}">${val}</span></div>`;
+  return `<div class="output-row"><span class="output-key">${key}</span><span class="output-val ${valClass}">${val || '—'}</span></div>`;
+}
+
+function rowBlock(key, val) {
+  return `<div class="output-row-block"><span class="output-key">${key}</span><span class="output-val output-val-block">${val || '—'}</span></div>`;
 }
 
 function severityClass(sev) { return `sev-${(sev||'').toLowerCase()}`; }
@@ -152,22 +156,22 @@ function severityClass(sev) { return `sev-${(sev||'').toLowerCase()}`; }
 function renderTriage(el, r) {
   const sev = (r.severity || '').toLowerCase();
   el.innerHTML = `
-    ${row('severity',        (r.severity||'—').toUpperCase(), severityClass(sev))}
-    ${row('category',        r.category || '—')}
-    ${row('affected_service',r.affected_service || '—')}
-    ${row('keywords',        (r.keywords||[]).join(', '))}
-    ${row('summary',         r.summary || '—')}
+    ${row('severity',         (r.severity||'—').toUpperCase(), severityClass(sev))}
+    ${row('category',         r.category || '—')}
+    ${row('affected_service', r.affected_service || '—')}
+    ${row('keywords',         (r.keywords||[]).join(', '))}
+    ${rowBlock('summary',     r.summary || '—')}
   `;
 }
 
 function renderAnalyst(el, r) {
-  const causes = (r.root_causes||[]).map((c,i) => `${i+1}. ${c}`).join('<br>');
+  const causes = (r.root_causes||[]).map((c,i) => `${i+1}. ${c}`).join('\n');
   el.innerHTML = `
-    ${row('root_causes',         causes || '—')}
-    ${row('blast_radius',        r.blast_radius || '—')}
-    ${row('escalate_recommended',r.escalate_recommended ? 'YES' : 'NO', r.escalate_recommended ? 'sev-high' : 'sev-low')}
-    ${row('confidence',          (r.confidence||'—').toUpperCase())}
-    ${r.escalation_reason ? row('escalation_reason', r.escalation_reason) : ''}
+    ${rowBlock('root_causes',         causes || '—')}
+    ${rowBlock('blast_radius',        r.blast_radius || '—')}
+    ${row('escalate_recommended', r.escalate_recommended ? 'YES' : 'NO', r.escalate_recommended ? 'sev-high' : 'sev-low')}
+    ${row('confidence',           (r.confidence||'—').toUpperCase())}
+    ${r.escalation_reason ? rowBlock('escalation_reason', r.escalation_reason) : ''}
   `;
 }
 
@@ -191,15 +195,12 @@ function renderEscalation(el, r) {
 }
 
 function renderRunbook(el, r) {
-  if (r.message) { el.innerHTML = row('status', r.message); return; }
+  if (r.message) { el.innerHTML = `<div class="output-row"><span class="output-key">status</span><span class="output-val">${r.message}</span></div>`; return; }
   el.innerHTML = `
-    ${row('query_sent',  r.query_sent || '—')}
-    ${row('source',      r.source || '—')}
-    ${row('api_status',  r.status || '—')}
-    <div class="output-row" style="flex-direction:column;gap:4px">
-      <span class="output-key">runbook_response</span>
-      <span class="output-val" style="white-space:pre-wrap">${r.runbook_response || '—'}</span>
-    </div>
+    ${rowBlock('query_sent',       r.query_sent || '—')}
+    ${row('source',                r.source || '—')}
+    ${row('api_status',            r.status || '—')}
+    ${rowBlock('runbook_response', r.runbook_response || '—')}
   `;
 }
 
