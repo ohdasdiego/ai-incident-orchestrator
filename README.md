@@ -134,3 +134,16 @@ This pipeline is intentionally built with raw Python + the Anthropic SDK rather 
 | 4 | RAG Runbook Assistant | [runbooks.ado-runner.com](https://runbooks.ado-runner.com) |
 | 5 | K8s Event Summarizer | [k8s.ado-runner.com](https://k8s.ado-runner.com) |
 | **7** | **AI Incident Orchestrator** | **[orchestrator.ado-runner.com](https://orchestrator.ado-runner.com)** |
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Scheduled triggers — auto-run pipeline on new incidents from ai-incident-logger instead of manual input only
+- [ ] Pipeline history log — persist past runs to SQLite with searchable archive and replay
+- [ ] Feedback loop — auto-create structured incidents in ai-incident-logger from orchestrator output
+- [ ] Confidence scoring UI — visualize each agent’s confidence level alongside its output
+- [ ] Slack/PagerDuty notification support alongside Telegram
+- [ ] Custom escalation thresholds — per-incident override of severity rules via UI
+- [ ] Multi-incident batch mode — process a queue of alerts in sequence with summary rollup
+- [ ] Agent output diffing — compare results across multiple runs of the same incident
