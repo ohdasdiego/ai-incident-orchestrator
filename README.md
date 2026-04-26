@@ -124,17 +124,17 @@ This pipeline is intentionally built with raw Python + the Anthropic SDK rather 
 
 ---
 
-## Part of ADOstack
+## ADOStack
 
-| # | Project | Live |
-|---|---------|------|
-| 1 | AI Infra Monitor | [monitor.ado-runner.com](https://monitor.ado-runner.com) |
-| 2 | AI Incident Logger | [logger.ado-runner.com](https://logger.ado-runner.com) |
-| 3 | Code Auditor | CLI |
-| 4 | RAG Runbook Assistant | [runbooks.ado-runner.com](https://runbooks.ado-runner.com) |
-| 5 | K8s Event Summarizer | [k8s.ado-runner.com](https://k8s.ado-runner.com) |
-| **7** | **AI Incident Orchestrator** | **[orchestrator.ado-runner.com](https://orchestrator.ado-runner.com)** |
-| 8 | On-Call Assistant | [oncall.ado-runner.com](https://oncall.ado-runner.com) |
+| # | Project | Live | Role |
+|---|---------|------|------|
+| 1 | [AI Infra Monitor](https://github.com/ohdasdiego/ai-infra-monitor) | [monitor.ado-runner.com](https://monitor.ado-runner.com) | Metric collection + AI health analysis |
+| 2 | [AI Incident Logger](https://github.com/ohdasdiego/ai-incident-logger) | [incidents.ado-runner.com](https://incidents.ado-runner.com) | Threshold alerting + incident records |
+| 3 | [Code Auditor](https://github.com/ohdasdiego/code-auditor) | CLI | AI-powered code review |
+| 4 | [RAG Runbook Assistant](https://github.com/ohdasdiego/rag-runbook-assistant) | [runbooks.ado-runner.com](https://runbooks.ado-runner.com) | Vector search over IT runbooks |
+| 5 | [K8s Event Summarizer](https://github.com/ohdasdiego/k8s-event-summarizer) | [k8s.ado-runner.com](https://k8s.ado-runner.com) | Kubernetes cluster health digests |
+| **6** | **AI Incident Orchestrator** | **[orchestrator.ado-runner.com](https://orchestrator.ado-runner.com)** | **← You are here** |
+| 7 | [On-Call Assistant](https://github.com/ohdasdiego/oncall-assistant) | [oncall.ado-runner.com](https://oncall.ado-runner.com) | Incident response + escalation routing |
 
 ---
 
