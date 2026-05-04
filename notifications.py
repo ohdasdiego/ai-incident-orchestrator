@@ -4,11 +4,11 @@ import requests
 def send_telegram(summary: dict, escalation: dict, token: str, chat_id: str):
     """Send incident summary to Telegram channel."""
     decision = escalation.get("decision", "auto")
-    status_label = "[ESCALATE]" if decision == "escalate" else "[AUTO]"
+    status_emoji = "🔴" if decision == "escalate" else "🟢"
     severity = summary.get("severity", "unknown").upper()
 
     lines = [
-        f"{status_label} *INCIDENT REPORT — {severity}*",
+        f"{status_emoji} *INCIDENT REPORT — {severity}*",
         f"*{summary.get('title', 'Incident')}*",
         "",
         f"*Status:* {summary.get('status', '—')}",

@@ -188,7 +188,7 @@ function renderEscalation(el, r) {
     badge.textContent = 'AUTO';
   }
   el.innerHTML = `
-    ${row('decision', isEsc ? 'ESCALATE TO HUMAN' : 'AUTO-REMEDIATE', isEsc ? 'decision-escalate' : 'decision-auto')}
+    ${row('decision', isEsc ? '🔴 ESCALATE TO HUMAN' : '🟢 AUTO-REMEDIATE', isEsc ? 'decision-escalate' : 'decision-auto')}
     ${row('reason',   r.reason || '—')}
     ${row('severity', (r.severity||'—').toUpperCase(), severityClass(r.severity))}
   `;

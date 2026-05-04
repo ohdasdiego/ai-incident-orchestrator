@@ -10,24 +10,24 @@ A production-deployed multi-agent pipeline that processes infrastructure inciden
 
 ```
 Incident Input
- ↓
- Triage Agent → Severity classification, category detection
- ↓
- Analyst Agent → Root cause analysis, blast radius assessment
- ↓
-[Escalation Gate] → Deterministic human-in-the-loop decision point
- ↓
+      ↓
+ Triage Agent        → Severity classification, category detection
+      ↓
+ Analyst Agent       → Root cause analysis, blast radius assessment
+      ↓
+[Escalation Gate]    → Deterministic human-in-the-loop decision point
+      ↓
  ┌────────────────────────────────┐
- │ LOW/MEDIUM │ HIGH/CRITICAL
- ↓ ↓
-Runbook Agent Human Review Flag
-(calls RAG Runbook API) (pipeline pauses)
- ↓ ↓
- └───────────────┬────────────────┘
- ↓
- Summary Agent → Structured incident report
- ↓
- Telegram Dispatch → Real-time NOC notification
+ │ LOW/MEDIUM                     │ HIGH/CRITICAL
+ ↓                                ↓
+Runbook Agent                 Human Review Flag
+(calls RAG Runbook API)       (pipeline pauses)
+      ↓                                ↓
+      └───────────────┬────────────────┘
+                      ↓
+               Summary Agent       → Structured incident report
+                      ↓
+               Telegram Dispatch   → Real-time NOC notification
 ```
 
 Each agent is a discrete Claude API call with a scoped system prompt, receiving only the context it needs — no shared state, no framework magic.
@@ -138,7 +138,7 @@ This pipeline is intentionally built with raw Python + the Anthropic SDK rather 
 
 ---
 
-## Roadmap
+## 🗺️ Roadmap
 
 - [ ] Scheduled triggers — auto-run pipeline on new incidents from ai-incident-logger instead of manual input only
 - [ ] Pipeline history log — persist past runs to SQLite with searchable archive and replay
